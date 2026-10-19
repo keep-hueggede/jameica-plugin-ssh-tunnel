@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<plugin name="ssh-tunnel" version="1.0.0" class="de.willuhn.jameica.ssh.SshTunnelPlugin" shared="false">
+
+  <description>SSH-Tunnel mit lokalem Port-Forwarding fuer Jameica</description>
+  <homepage>https://github.com/keep-hueggede/jameica-plugin-ssh-tunnel</homepage>
+  <license>GPL - http://www.gnu.org/licenses/gpl-3.0.html</license>
+
+  <requires jameica="2.10.0+"/>
+
+  <classfinder>
+    <include>ssh-tunnel\.jar</include>
+  </classfinder>
+
+  <extensions>
+    <extension class="de.willuhn.jameica.ssh.SshTunnelSettingsView"
+               extends="de.willuhn.jameica.gui.internal.views.Settings"/>
+  </extensions>
+
+</plugin>
