@@ -14,8 +14,8 @@ import java.io.File;
 
 import de.willuhn.jameica.security.Wallet;
 import de.willuhn.jameica.system.Application;
-import de.willuhn.jameica.system.Settings;
 import de.willuhn.logging.Logger;
+import de.willuhn.util.Settings;
 
 /**
  * Service, der einen konfigurierbaren SSH-Tunnel mit lokalem Port-Forwarding
@@ -33,14 +33,32 @@ import de.willuhn.logging.Logger;
  */
 public class SshTunnelService
 {
-  private static final Settings settings = new Settings(SshTunnelService.class);
-
   // Aliase der verschluesselt gespeicherten Geheimnisse im Wallet.
   private static final String SECRET_PASSWORD   = "password";
   private static final String SECRET_PASSPHRASE = "passphrase";
 
+  private final Settings settings;
+
   private Wallet wallet    = null;
   private SshTunnel tunnel = null;
+
+  /**
+   * Erzeugt den Service mit den Jameica-Einstellungen des Plugins.
+   */
+  public SshTunnelService()
+  {
+    this(new de.willuhn.jameica.system.Settings(SshTunnelService.class));
+  }
+
+  /**
+   * Erzeugt den Service mit den uebergebenen Einstellungen.
+   * Dient der Testbarkeit, damit kein laufender Jameica-Kontext benoetigt wird.
+   * @param settings die zu verwendenden Einstellungen.
+   */
+  SshTunnelService(Settings settings)
+  {
+    this.settings = settings;
+  }
 
   /**
    * Liefert true, wenn der Tunnel beim Start automatisch aufgebaut werden soll.
@@ -191,16 +209,16 @@ public class SshTunnelService
    * Liefert die Einstellungen dieses Service.
    * @return die Einstellungen.
    */
-  public static Settings getSettings()
+  public Settings getSettings()
   {
-    return settings;
+    return this.settings;
   }
 
   /**
    * Liefert den Default-Pfad der known_hosts-Datei.
    * @return Default-Pfad der known_hosts-Datei.
    */
-  private String getDefaultKnownHosts()
+  String getDefaultKnownHosts()
   {
     return Application.getConfig().getConfigDir() + File.separator + "known_hosts";
   }
@@ -210,7 +228,7 @@ public class SshTunnelService
    * @param alias Alias des Geheimnisses.
    * @return das Geheimnis oder {@code null}.
    */
-  private String getSecret(String alias)
+  String getSecret(String alias)
   {
     try
     {
@@ -230,7 +248,7 @@ public class SshTunnelService
    * @param alias Alias des Geheimnisses.
    * @param value das zu speichernde Geheimnis.
    */
-  private void setSecret(String alias, String value)
+  void setSecret(String alias, String value)
   {
     try
     {
