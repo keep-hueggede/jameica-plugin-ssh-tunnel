@@ -232,6 +232,44 @@ public class SshTunnelServiceTest
   }
 
   /**
+   * Einstellungen und Wallet aus Jameica-Core-Zeiten muessen auf den neuen
+   * Klassennamen umbenannt werden.
+   * @throws Exception
+   */
+  @Test
+  public void legacyFilesAreMigrated() throws Exception
+  {
+    for (String suffix:SshTunnelService.FILE_SUFFIXES)
+      Assert.assertTrue(new File(this.configDir,SshTunnelService.LEGACY_NAME + suffix).createNewFile());
+
+    SshTunnelService.migrateLegacyFiles(this.configDir);
+
+    for (String suffix:SshTunnelService.FILE_SUFFIXES)
+    {
+      Assert.assertFalse(new File(this.configDir,SshTunnelService.LEGACY_NAME + suffix).exists());
+      Assert.assertTrue(new File(this.configDir,SshTunnelService.class.getName() + suffix).isFile());
+    }
+  }
+
+  /**
+   * Bereits vorhandene Dateien des Plugins duerfen nicht ueberschrieben werden.
+   * @throws Exception
+   */
+  @Test
+  public void existingFilesAreNotOverwritten() throws Exception
+  {
+    File legacy  = new File(this.configDir,SshTunnelService.LEGACY_NAME + ".properties");
+    File current = new File(this.configDir,SshTunnelService.class.getName() + ".properties");
+    java.nio.file.Files.write(legacy.toPath(),"ssh.host=old\n".getBytes("ISO-8859-1"));
+    java.nio.file.Files.write(current.toPath(),"ssh.host=new\n".getBytes("ISO-8859-1"));
+
+    SshTunnelService.migrateLegacyFiles(this.configDir);
+
+    Assert.assertTrue(legacy.isFile());
+    Assert.assertEquals("ssh.host=new\n",new String(java.nio.file.Files.readAllBytes(current.toPath()),"ISO-8859-1"));
+  }
+
+  /**
    * Loescht ein Verzeichnis rekursiv.
    * @param f das zu loeschende Verzeichnis oder File.
    */

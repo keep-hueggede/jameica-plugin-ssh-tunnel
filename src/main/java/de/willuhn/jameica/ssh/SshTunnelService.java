@@ -37,6 +37,10 @@ public class SshTunnelService
   private static final String SECRET_PASSWORD   = "password";
   private static final String SECRET_PASSPHRASE = "passphrase";
 
+  // Class name used while the tunnel was part of the Jameica core.
+  static final String LEGACY_NAME = "de.willuhn.jameica.services.SshTunnelService";
+  static final String[] FILE_SUFFIXES = {".properties",".wallet2"};
+
   private final Settings settings;
 
   private Wallet wallet    = null;
@@ -47,7 +51,39 @@ public class SshTunnelService
    */
   public SshTunnelService()
   {
-    this(new de.willuhn.jameica.system.Settings(SshTunnelService.class));
+    this(createSettings());
+  }
+
+  /**
+   * Uebernimmt ggf. die Dateien aus Jameica-Core-Zeiten und liefert die Einstellungen.
+   * @return die Einstellungen.
+   */
+  private static Settings createSettings()
+  {
+    migrateLegacyFiles(new File(Application.getConfig().getConfigDir()));
+    return new de.willuhn.jameica.system.Settings(SshTunnelService.class);
+  }
+
+  /**
+   * Benennt Einstellungen und Wallet aus der Zeit, als der SSH-Tunnel Teil des
+   * Jameica-Cores war, auf den Klassennamen des Plugins um. Existiert die neue
+   * Datei bereits, bleibt die alte unangetastet.
+   * @param configDir das Konfigurationsverzeichnis von Jameica.
+   */
+  static void migrateLegacyFiles(File configDir)
+  {
+    for (String suffix:FILE_SUFFIXES)
+    {
+      File legacy  = new File(configDir,LEGACY_NAME + suffix);
+      File current = new File(configDir,SshTunnelService.class.getName() + suffix);
+      if (!legacy.isFile() || current.exists())
+        continue;
+
+      if (legacy.renameTo(current))
+        Logger.info("migrated " + legacy.getName() + " to " + current.getName());
+      else
+        Logger.warn("unable to migrate " + legacy.getAbsolutePath());
+    }
   }
 
   /**
