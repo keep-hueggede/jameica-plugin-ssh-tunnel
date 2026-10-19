@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.willuhn.jameica</groupId>
+  <artifactId>ssh-tunnel</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>Jameica SSH-Tunnel Plugin</name>
+  <description>SSH-Tunnel mit lokalem Port-Forwarding fuer Jameica</description>
+  <url>https://github.com/keep-hueggede/jameica-plugin-ssh-tunnel</url>
+
+  <properties>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+    <maven.compiler.release>11</maven.compiler.release>
+
+    <!-- Version des Jameica-Cores, gegen den das Plugin compiliert wird.
+         Die Core-Artefakte (jameica, de_willuhn_util, de_willuhn_ds) sind nicht
+         auf Maven Central verfuegbar. Sie werden vom Build-Skript
+         (build/build.ps1 bzw. build/build.sh) aus dem Jameica-Repository in das
+         lokale Maven-Repository installiert. -->
+    <jameica.version>2.13.0-nightly</jameica.version>
+    <swt.version>3.131.0</swt.version>
+    <jsch.version>2.28.8</jsch.version>
+  </properties>
+
+  <dependencies>
+    <!-- Werden zur Compile-Zeit vom Jameica-Core bereitgestellt und NICHT
+         mit dem Plugin ausgeliefert. -->
+    <dependency>
+      <groupId>de.willuhn.jameica</groupId>
+      <artifactId>jameica</artifactId>
+      <version>${jameica.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.willuhn</groupId>
+      <artifactId>de_willuhn_util</artifactId>
+      <version>${jameica.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.willuhn</groupId>
+      <artifactId>de_willuhn_ds</artifactId>
+      <version>${jameica.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.platform</groupId>
+      <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+      <version>${swt.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSch wird mit dem Plugin ausgeliefert (landet in lib/). -->
+    <dependency>
+      <groupId>com.github.mwiede</groupId>
+      <artifactId>jsch</artifactId>
+      <version>${jsch.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- Name des Klassen-Jars im Plugin-Verzeichnis: ssh-tunnel.jar -->
+    <finalName>ssh-tunnel-${project.version}</finalName>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.7.1</version>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/assembly/plugin-assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-plugin</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

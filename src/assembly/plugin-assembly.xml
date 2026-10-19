@@ -1,0 +1,59 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
+
+  <!--
+    Erzeugt ein Jameica-Plugin als ZIP mit genau einem Top-Level-Verzeichnis
+    "ssh-tunnel/" (so verlangt es Jameica beim Deployment):
+
+      ssh-tunnel/
+        plugin.xml
+        ssh-tunnel.jar
+        lib/jsch-<version>.jar
+        LICENSE
+  -->
+  <id>plugin</id>
+
+  <formats>
+    <format>zip</format>
+    <format>dir</format>
+  </formats>
+
+  <includeBaseDirectory>true</includeBaseDirectory>
+  <baseDirectory>ssh-tunnel</baseDirectory>
+
+  <files>
+    <file>
+      <source>${project.build.directory}/${project.build.finalName}.jar</source>
+      <outputDirectory>.</outputDirectory>
+      <destName>ssh-tunnel.jar</destName>
+    </file>
+  </files>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>plugin.xml</include>
+        <include>LICENSE</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/src/main/resources</directory>
+      <outputDirectory>.</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <includes>
+        <include>com.github.mwiede:jsch</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+
+</assembly>
