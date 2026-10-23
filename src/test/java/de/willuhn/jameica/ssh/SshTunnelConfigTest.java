@@ -36,7 +36,7 @@ public class SshTunnelConfigTest
     Assert.assertNull(c.getPassphrase());
     Assert.assertNull(c.getKnownHosts());
     Assert.assertTrue(c.isStrictHostKeyChecking());
-    Assert.assertEquals(0,c.getLocalPort());
+    Assert.assertEquals(3306,c.getLocalPort());
     Assert.assertEquals("127.0.0.1",c.getRemoteHost());
     Assert.assertEquals(3306,c.getRemotePort());
     Assert.assertEquals(15000,c.getTimeout());

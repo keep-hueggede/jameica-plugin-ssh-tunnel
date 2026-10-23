@@ -79,7 +79,7 @@ public class SshTunnelServiceTest
     Assert.assertNull(c.getPassphrase());
     Assert.assertEquals("/tmp/known_hosts",c.getKnownHosts());
     Assert.assertTrue(c.isStrictHostKeyChecking());
-    Assert.assertEquals(0,c.getLocalPort());
+    Assert.assertEquals(3306,c.getLocalPort());
     Assert.assertEquals("127.0.0.1",c.getRemoteHost());
     Assert.assertEquals(3306,c.getRemotePort());
     Assert.assertEquals(15000,c.getTimeout());
@@ -229,6 +229,16 @@ public class SshTunnelServiceTest
 
     Assert.assertEquals("ssh.example.org",s2.getConfig().getSshHost());
     Assert.assertEquals(5432,s2.getConfig().getRemotePort());
+  }
+
+  /**
+   * Ohne gespeicherten lokalen Port muss der Ziel-Port verwendet werden.
+   */
+  @Test
+  public void localPortDefaultsToRemotePort()
+  {
+    this.settings.setAttribute("remote.port",5432);
+    Assert.assertEquals(5432,this.service.getConfig().getLocalPort());
   }
 
   /**

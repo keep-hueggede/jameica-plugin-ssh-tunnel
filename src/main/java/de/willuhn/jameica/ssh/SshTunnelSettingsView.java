@@ -160,11 +160,15 @@ public class SshTunnelSettingsView implements Extension
 
       tab.addHeadline(i18n.tr("Port-Weiterleitung"));
       tab.addText(i18n.tr("Der lokale Port wird auf den Ziel-Host und Ziel-Port in Sicht des " +
-          "SSH-Servers weitergeleitet. Ein lokaler Port von 0 waehlt automatisch einen freien Port."),true);
+          "SSH-Servers weitergeleitet. Tragen Sie im Plugin (z.Bsp. JVerein) als Datenbank-Port den " +
+          "lokalen Port ein."),true);
+      tab.addText(i18n.tr("Achtung: Ein lokaler Port von 0 waehlt bei jedem Start einen anderen freien Port. " +
+          "Das funktioniert nur mit Plugins, die den Port beim SSH-Tunnel abfragen - nicht mit einer fest " +
+          "eingetragenen Datenbank-Adresse."),true);
 
       this.localPort = new IntegerInput(c.getLocalPort());
       this.localPort.setMaxLength(5);
-      this.localPort.setComment(i18n.tr("0 = automatisch"));
+      this.localPort.setComment(i18n.tr("0 = zufaellig"));
       tab.addLabelPair(i18n.tr("Lokaler Port"),this.localPort);
 
       this.remoteHost = new TextInput(c.getRemoteHost());
@@ -208,9 +212,9 @@ public class SshTunnelSettingsView implements Extension
     c.setPassphrase(trim((String)this.passphrase.getValue()));
     c.setKnownHosts(trim((String)this.knownHosts.getValue()));
     c.setStrictHostKeyChecking(((Boolean)this.strictHostKey.getValue()).booleanValue());
-    c.setLocalPort(intValue(this.localPort,0));
     c.setRemoteHost(trim((String)this.remoteHost.getValue()));
     c.setRemotePort(intValue(this.remotePort,3306));
+    c.setLocalPort(intValue(this.localPort,c.getRemotePort()));
     return c;
   }
 

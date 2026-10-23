@@ -185,9 +185,9 @@ public class SshTunnelService
     c.setPassphrase(this.getSecret(SECRET_PASSPHRASE));
     c.setKnownHosts(settings.getString("ssh.knownhosts",this.getDefaultKnownHosts()));
     c.setStrictHostKeyChecking(settings.getBoolean("ssh.stricthostkeycheck",true));
-    c.setLocalPort(settings.getInt("local.port",0));
     c.setRemoteHost(settings.getString("remote.host","127.0.0.1"));
     c.setRemotePort(settings.getInt("remote.port",3306));
+    c.setLocalPort(settings.getInt("local.port",c.getRemotePort()));
     c.setTimeout(settings.getInt("timeout",15000));
     return c;
   }

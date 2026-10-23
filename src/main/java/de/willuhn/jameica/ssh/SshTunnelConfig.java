@@ -69,7 +69,8 @@ public class SshTunnelConfig
   private boolean strictHostKeyChecking = true;
 
   // Port-Weiterleitung. localPort 0 bedeutet: freien Port automatisch waehlen.
-  private int localPort                 = 0;
+  // Default ist der Ziel-Port, damit Plugins einen festen Port konfigurieren koennen.
+  private int localPort                 = 3306;
   private String remoteHost             = "127.0.0.1";
   private int remotePort                = 3306;
 
