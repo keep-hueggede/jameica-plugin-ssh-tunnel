@@ -3,11 +3,11 @@
 <plugin xmlns="http://www.willuhn.de/schema/jameica-plugin"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.willuhn.de/schema/jameica-plugin http://www.willuhn.de/schema/jameica-plugin-1.5.xsd"
-        name="ssh-tunnel" version="1.0.0" class="de.willuhn.jameica.ssh.SshTunnelPlugin" shared="false">
+        name="ssh-tunnel" version="1.0.1" class="de.willuhn.jameica.ssh.SshTunnelPlugin" shared="false">
 
   <description>SSH-Tunnel mit lokalem Port-Forwarding fuer Jameica</description>
-  <url>https://keep-hueggede.github.io/jameica-plugin-ssh-tunnel/jameica-repository/ssh-tunnel/ssh-tunnel-1.0.0.zip</url>
-  <homepage>https://github.com/keep-hueggede/jameica-plugin-ssh-tunnel</homepage>
+  <url>https://keep-hueggede.github.io/jameica-plugin-ssh-tunnel/jameica-repository/ssh-tunnel/ssh-tunnel-1.0.1.zip</url>
+  <homepage validate="true">https://keep-hueggede.github.io/jameica-plugin-ssh-tunnel/</homepage>
   <license>GPL - http://www.gnu.org/licenses/gpl-3.0.html</license>
 
   <requires jameica="2.10.0+"/>
